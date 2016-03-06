@@ -15,6 +15,7 @@ float t = 1.0f;
 float b = -1.0f;
 float l = -1.0f;
 std::vector<Vector4d> points;
+Matrix4d viewport_matrix;
 Matrix4d perspective_matrix;
 
 
@@ -59,6 +60,12 @@ int main(int, char **){
     points.push_back(Vector4d(-1, 1, -1, 1));
 
     //compute Mvp
+    viewport_matrix <<
+            width/2, 0, 0, (width-1)/2,
+            0, height/2, 0, (height-1)/2,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
+
     //compute Mperspective=Morth*Mper
     perspective_matrix <<
             2*n/(r-l), 0, (l+r)/(l-r), 0,
