@@ -1,13 +1,13 @@
 #include "Canvas.h"
 #include <math.h>
-#include "eigen/Eigen/Dense"
+#include "Eigen/Dense"
 using namespace Eigen;
 
 unsigned int width = 512;
 unsigned int height = 512;
 
 Canvas canvas;
-float distance = 5.0f;
+float distance = 10.0f;
 Vector3d camera(1, 0, 0);
 float n = 1.0f;
 float f = 5.0f;
@@ -19,6 +19,7 @@ std::vector<Vector4d> points;
 Matrix4d viewport_matrix;
 Matrix4d perspective_matrix;
 Matrix4d camera_matrix;
+Matrix4d final_matrix;
 
 
 void InitializeGL()
@@ -43,7 +44,17 @@ void KeyPress(char keychar)
 
 void OnPaint()
 {
+    printf("Matrix Size: %lu\n", points.size());
 
+    for(int i=0; i<points.size(); i++)///i+2???
+    {
+        Vector4d p = final_matrix*points[i];
+        Vector4d q = final_matrix*points[i+1];
+        printf("Point X: %f, %f Y: %f, %f\n", p[0], p[2], q[0], q[2]);
+
+        canvas.AddLine(p[0]/p[2], p[1]/p[2], q[0]/q[2], q[1]/q[2]);
+
+    }
 }
 
 void OnTimer()
@@ -98,6 +109,8 @@ int main(int, char **){
           0, 0, 0, 1;
 
     camera_matrix = MV*temp;
+
+    final_matrix= viewport_matrix*perspective_matrix*camera_matrix;
     //draw lines for all the points
 
     //Link the call backs
