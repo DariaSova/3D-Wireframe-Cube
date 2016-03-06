@@ -7,7 +7,8 @@ unsigned int width = 512;
 unsigned int height = 512;
 
 Canvas canvas;
-float Distance = 5.0f;
+float distance = 5.0f;
+Vector3d camera(1, 0, 0);
 float n = 1.0f;
 float f = 5.0f;
 float r = 1.0f;
@@ -17,6 +18,7 @@ float l = -1.0f;
 std::vector<Vector4d> points;
 Matrix4d viewport_matrix;
 Matrix4d perspective_matrix;
+Matrix4d camera_matrix;
 
 
 void InitializeGL()
@@ -74,6 +76,28 @@ int main(int, char **){
             0, 0, 1, 0;
 
     //compute Mcamera
+    Vector3d eye_position = camera * distance;
+    Vector3d gaze_dir= eye_position*(-1);
+    Vector3d up_vector(0, 1, 0);
+    Vector3d w = -(gaze_dir/gaze_dir.norm());
+    Vector3d u = ((up_vector.cross(w))/(up_vector.cross(w)).norm());
+    Vector3d v = w.cross(u);
+
+    Matrix4d MV;
+            MV <<
+               u[0], u[1], u[2], 0,
+               v[0], v[1], v[2], 0,
+               w[0], w[1], w[2], 0,
+               0, 0, 0, 1;
+
+    Matrix4d temp;
+    temp <<
+          1, 0, 0, -eye_position[0],
+          0, 1, 0, -eye_position[1],
+          0, 0, 1, -eye_position[2],
+          0, 0, 0, 1;
+
+    camera_matrix = MV*temp;
     //draw lines for all the points
 
     //Link the call backs
