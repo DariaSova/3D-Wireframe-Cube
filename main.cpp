@@ -46,13 +46,13 @@ void OnPaint()
 {
    // printf("Matrix Size: %lu\n", points.size());
 
-    for(int i=0; i<points.size(); i++)///i+2???
+    for(int i=0; i<points.size()-1; i++)///i+2???
     {
         Vector4f p = final_matrix*points[i];
         Vector4f q = final_matrix*points[i+1];
         printf("Point X: %f, %f Y: %f, %f\n", p[0], p[1], q[0], q[1]);
 
-        canvas.AddLine(p[0]/p[2], p[1]/p[2], q[0]/q[2], q[1]/q[2]);
+        canvas.AddLine(5*p[0]/p[2], 5*p[1]/p[2], 5*q[0]/q[2], 5*q[1]/q[2]);
         //canvas.AddLine(0,0.2,0.9,0.9);
 
     }
@@ -64,14 +64,43 @@ void OnTimer()
 }
 
 int main(int, char **){
+    /*points.push_back(Vector4f(-1, 1, 1, 1));
+    points.push_back(Vector4f(1, 1, 1, 1));
+    points.push_back(Vector4f(-1, -1, 1, 1));
+    points.push_back(Vector4f(1, -1, 1, 1));
+    points.push_back(Vector4f(-1, 1, -1, 1));
+    points.push_back(Vector4f(1, 1, -1, 1));
+    points.push_back(Vector4f(1, -1, -1, 1));
+    points.push_back(Vector4f(-1, -1, -1, 1));
+    //points.push_back(Vector4f(-1, 1, 1, 1));*/
+
+    //front
     points.push_back(Vector4f(1, 1, 1, 1));
     points.push_back(Vector4f(1, -1, 1, 1));
-    points.push_back(Vector4f(1, -1, -1, 1));
+    points.push_back(Vector4f(-1, -1, 1, 1));
+    points.push_back(Vector4f(-1, 1, 1, 1));
+    points.push_back(Vector4f(1, 1, 1, 1));
+
+    //rightside
     points.push_back(Vector4f(1, 1, -1, 1));
+    points.push_back(Vector4f(1, -1, -1, 1));
+    points.push_back(Vector4f(1, -1, 1, 1));
+    points.push_back(Vector4f(1, 1, 1, 1));
+    points.push_back(Vector4f(1, 1, -1, 1));
+
+    //back
+    points.push_back(Vector4f(1, 1, -1, 1));
+    points.push_back(Vector4f(1, -1, -1, 1));
+    points.push_back(Vector4f(-1, -1, -1, 1));
+    points.push_back(Vector4f(-1, 1, -1, 1));
+    points.push_back(Vector4f(1, 1, -1, 1));
+
+    //leftside
+    points.push_back(Vector4f(-1, 1, -1, 1));
     points.push_back(Vector4f(-1, 1, 1, 1));
     points.push_back(Vector4f(-1, -1, 1, 1));
     points.push_back(Vector4f(-1, -1, -1, 1));
-    points.push_back(Vector4f(-1, 1, -1, 1));
+
 
     //compute Mvp
     viewport_matrix <<
