@@ -26,6 +26,7 @@ float t = 1.0f;
 float b = -1.0f;
 float l = -1.0f;
 
+float scale = 1.0f;
 
 std::vector<Vector4f> points;
 Matrix4f perspective_matrix;
@@ -66,6 +67,7 @@ void MouseButton(MouseButtons mouseButton, bool press)
 void KeyPress(char keychar)
 {
 
+    //change scale
 
 }
 
@@ -96,6 +98,12 @@ void OnPaint()
       0, 0, 0, 1;
 
 
+    Matrix4f Zoom;
+    Zoom <<
+      scale, 0, 0, 0,
+      0, scale, 0, 0,
+      0, 0, scale, 0,
+      0, 0, 0, 1;
 
     //compute Mperspective=Morth*Mper
     perspective_matrix <<
@@ -137,8 +145,8 @@ void OnPaint()
   for(int i=0; i<points.size()-1; i++)
   {
 
-    Vector4f p = final_matrix*Yrotation*points[i];
-    Vector4f q = final_matrix*Yrotation*points[i+1];
+    Vector4f p = final_matrix*Yrotation*Zoom*points[i];
+    Vector4f q = final_matrix*Yrotation*Zoom*points[i+1];
 
     canvas.AddLine(p[0]/p[2], p[1]/p[2], q[0]/q[2], q[1]/q[2]);
 
