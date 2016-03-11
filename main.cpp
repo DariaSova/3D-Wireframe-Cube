@@ -47,7 +47,6 @@ void MouseMove(double x, double y)
 
     horizontal_angle += mouse_speed * x_diff;
     vertical_angle += mouse_speed * y_diff;
-
   }
   else if (rightButtonPressed == true) {
     float y_diff = y-mouse_pos_y;
@@ -57,7 +56,6 @@ void MouseMove(double x, double y)
   //update current mouse position
   mouse_pos_x = x;
   mouse_pos_y = y;
-
 }
 
 void MouseButton(MouseButtons mouseButton, bool press)
@@ -76,11 +74,9 @@ void MouseButton(MouseButtons mouseButton, bool press)
   }
 }
 
-
 void OnPaint()
 {
   canvas.Clear();
-
 
   //compute Mperspective=Morth*Mper
   perspective_matrix <<
@@ -98,13 +94,11 @@ void OnPaint()
 
   Vector3f gaze_dir= center - camera; //center-eye_pos
 
+  //update radius
   radius = gaze_dir.norm();
-  //printf("RADIUS: %f", r);
-
   Vector3f w = -(gaze_dir/gaze_dir.norm());
   Vector3f u = ((up_vector.cross(w))/(up_vector.cross(w)).norm());
   Vector3f v = w.cross(u);
-
 
   Matrix4f MV;
   MV <<
@@ -112,7 +106,6 @@ void OnPaint()
     v[0], v[1], v[2], 0,
     w[0], w[1], w[2], 0,
     0, 0, 0, 1;
-  // printf("MV X: %f, %f Y: %f, %f\n", MV(0,0), MV(0,1), MV(0,2), MV(0,3));
 
   Matrix4f temp;
   temp <<
@@ -126,23 +119,13 @@ void OnPaint()
 
     for(int i=0; i<points.size()-1; i++)
     {
-
       Vector4f p = final_matrix*points[i];
       Vector4f q = final_matrix*points[i+1];
-
       canvas.AddLine(p[0]/p[2], p[1]/p[2], q[0]/q[2], q[1]/q[2]);
-
     }
 }
 
-void OnTimer()
-{
-
-}
-
 int main(int, char **){
-
-
 
   //front
   points.push_back(Vector4f(1, 1, 1, 1));
@@ -171,15 +154,11 @@ int main(int, char **){
   points.push_back(Vector4f(-1, -1, 1, 1));
   points.push_back(Vector4f(-1, -1, -1, 1));
 
-
-
-
   //Link the call backs
   canvas.SetMouseMove(MouseMove);
   canvas.SetMouseButton(MouseButton);
   //Draw cube
   canvas.SetOnPaint(OnPaint);
-  canvas.SetTimer(0.05, OnTimer);
   //Show Window
   canvas.Initialize(width, height, "3D Wireframe Cube");
   canvas.Show();
