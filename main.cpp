@@ -7,6 +7,7 @@ using namespace Eigen;
 unsigned int width = 512;
 unsigned int height = 512;
 bool leftButtonPressed = false;
+bool rightButtonPressed = false;
 float mouse_pos_x = 0;
 float mouse_pos_y = 0;
 float mouse_speed = 0.008;
@@ -63,15 +64,14 @@ void MouseButton(MouseButtons mouseButton, bool press)
     if (press == true) leftButtonPressed = true;
     else leftButtonPressed = false;
   }
-
+  //check for right button
+  if (mouseButton == RightButton)
+  {
+    if (press == true) rightButtonPressed = true;
+    else rightButtonPressed = false;
+  }
 }
 
-void KeyPress(char keychar)
-{
-
-  //change scale
-
-}
 
 void OnPaint()
 {
