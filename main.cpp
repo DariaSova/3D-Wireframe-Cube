@@ -1,5 +1,6 @@
 #include "Canvas.h"
 #include <math.h>
+#include <cmath>
 #include "Eigen/Dense"
 using namespace Eigen;
 
@@ -8,16 +9,20 @@ unsigned int height = 512;
 bool leftButtonPressed = false;
 float mouse_pos_x = 0;
 float mouse_pos_y = 0;
-float mouse_speed = 0.0001;
+float mouse_speed = 0.001;
 
+float radius =5;
 // horizontal angle : toward -Z
 float horizontal_angle = 0.0f;
 // vertical angle : 0, look at the horizon
 float vertical_angle = 0.0f;
 
 Canvas canvas;
-Vector3f camera(0, 0, 5);
+//Vector3f camera(0,5,0);
+Vector3f camera;
 Vector3f center(0, 0, 0);
+Vector3f up_vector(0, 1, 0);
+
 //visible area on the screen
 float n = -1.0f;
 float f = -10.0f;
@@ -45,8 +50,9 @@ void MouseMove(double x, double y)
         mouse_pos_x = x;
         mouse_pos_y = y;
 
-        horizontal_angle += mouse_speed * float(width/2 - mouse_pos_x );
-        vertical_angle   += mouse_speed * float( height/2 - mouse_pos_y );
+        //horizontal_angle += mouse_speed * float(width/2 - mouse_pos_x );
+        //vertical_angle   += mouse_speed * float( height/2 - mouse_pos_y );
+
     }
 
     //calculate speed??
@@ -76,35 +82,6 @@ void OnPaint()
     canvas.Clear();
 
 
-
-   /* if (leftButtonPressed == true)
-    {
-        horizontal_angle += mouse_speed * float(width/2 - mouse_pos_x );
-        vertical_angle   += mouse_speed * float( height/2 - mouse_pos_y );
-    }*/
-
-    Matrix4f Xrotation;
-    Xrotation <<
-      1, 0, 0, 0,
-      0, cos(horizontal_angle), -sin(horizontal_angle), 0,
-      0, sin(horizontal_angle), cos(horizontal_angle), 0,
-      0, 0, 0, 1;
-
-    Matrix4f Yrotation;
-    Yrotation <<
-      cos(horizontal_angle), 0, sin(horizontal_angle), 0,
-      0, 1, 0, 0,
-      -sin(horizontal_angle), 0, cos(horizontal_angle), 0,
-      0, 0, 0, 1;
-
-
-    Matrix4f Zoom;
-    Zoom <<
-      scale, 0, 0, 0,
-      0, scale, 0, 0,
-      0, 0, scale, 0,
-      0, 0, 0, 1;
-
     //compute Mperspective=Morth*Mper
     perspective_matrix <<
       2*n/(r-l), 0, (l+r)/(l-r), 0,
@@ -113,16 +90,21 @@ void OnPaint()
       0, 0, 1, 0;
 
     //compute Mcamera
+    Vector3f new_camera (
+              radius*sin(horizontal_angle)*cos(vertical_angle),
+              radius*sin(horizontal_angle)*sin(vertical_angle),
+              radius*cos(horizontal_angle));
+    camera = new_camera;
+
     Vector3f gaze_dir= center - camera; //center-eye_pos
-    /*Vector3f gaze_dir (
-                cos(vertical_angle) * sin(horizontal_angle),
-                sin(vertical_angle),
-                cos(vertical_angle) * cos(horizontal_angle)
-    );*/
-    Vector3f up_vector(0, 1, 0);
+
+    radius = gaze_dir.norm();
+    printf("RADIUS: %f", r);
+
     Vector3f w = -(gaze_dir/gaze_dir.norm());
     Vector3f u = ((up_vector.cross(w))/(up_vector.cross(w)).norm());
     Vector3f v = w.cross(u);
+
 
     Matrix4f MV;
     MV <<
@@ -145,8 +127,8 @@ void OnPaint()
   for(int i=0; i<points.size()-1; i++)
   {
 
-    Vector4f p = final_matrix*Yrotation*Zoom*points[i];
-    Vector4f q = final_matrix*Yrotation*Zoom*points[i+1];
+    Vector4f p = final_matrix*points[i];
+    Vector4f q = final_matrix*points[i+1];
 
     canvas.AddLine(p[0]/p[2], p[1]/p[2], q[0]/q[2], q[1]/q[2]);
 
