@@ -9,7 +9,7 @@ unsigned int height = 512;
 bool leftButtonPressed = false;
 float mouse_pos_x = 0;
 float mouse_pos_y = 0;
-float mouse_speed = 0.001;
+float mouse_speed = 0.01;
 
 float radius =5;
 // horizontal angle : toward -Z
@@ -18,7 +18,6 @@ float horizontal_angle = 0.0f;
 float vertical_angle = 0.0f;
 
 Canvas canvas;
-//Vector3f camera(0,5,0);
 Vector3f camera;
 Vector3f center(0, 0, 0);
 Vector3f up_vector(0, 1, 0);
@@ -44,14 +43,15 @@ void MouseMove(double x, double y)
     //check in which direction the mouse is moving
     float x_diff = x- mouse_pos_x;
     float y_diff = y -mouse_pos_y;
-    //Vector3f camera_n (x_diff, y_diff, 0);
+
+    horizontal_angle += mouse_speed * x_diff;
+    vertical_angle += mouse_speed * y_diff;
+
 
     //update current mouse position
-        mouse_pos_x = x;
-        mouse_pos_y = y;
+    mouse_pos_x = x;
+    mouse_pos_y = y;
 
-        //horizontal_angle += mouse_speed * float(width/2 - mouse_pos_x );
-        //vertical_angle   += mouse_speed * float( height/2 - mouse_pos_y );
 
     }
 
