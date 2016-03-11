@@ -49,6 +49,10 @@ void MouseMove(double x, double y)
     vertical_angle += mouse_speed * y_diff;
 
   }
+  else if (rightButtonPressed == true) {
+    float y_diff = y-mouse_pos_y;
+    radius += y_diff*mouse_speed;
+  }
 
   //update current mouse position
   mouse_pos_x = x;
@@ -173,7 +177,6 @@ int main(int, char **){
   //Link the call backs
   canvas.SetMouseMove(MouseMove);
   canvas.SetMouseButton(MouseButton);
-  canvas.SetKeyPress(KeyPress);
   //Draw cube
   canvas.SetOnPaint(OnPaint);
   canvas.SetTimer(0.05, OnTimer);
